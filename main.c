@@ -1,73 +1,42 @@
 #include <stdio.h>
-#include <ctype.h>
 #include <string.h>
 
-int main(){
-/*counting number of vertical lines in file*/
-    FILE *fp;
-    int count = 0;
-    char input[100];
-    char c;
+int main(int argc, char **argv){
 
-    printf("Enter input file name: ");
-    scanf("%s", input);
-
-    fp = fopen(input, "r");
-
-    if (fp == NULL)
-    {
-        printf("Could not open file %s", input);
-        return 0;
-    }
-
-    for (c = getc(fp); c != EOF; c = getc(fp))
-        if (c == '\n')
-            count = count + 1;
-
-    fclose(fp);
-
-/*initializing variables*/
-    char output[100] = {'\0'};
-    char text[][255] = {'\0'};
-    char line[255] = {'\0'};
-    FILE * original = original;
-    FILE * noWhiteSpace = noWhiteSpace;
-
-/*prompt and recieve file locations*/
-    original = fopen(input, "r");
-/*error check*/
-    if (original == NULL){
-    printf("Input file does not exist or is in another location.");
-    return 1;
-    }
-    printf("Enter output file path: ");
-    scanf("%s", output);
-    noWhiteSpace = fopen(output, "w");
-/*error check*/
-    if (output == NULL){
-        printf("Error creating file.");
-        return 1;
-    }
-/*cycles through vertical lines*/
-for(int j = 0; j < count; j++){
-/*gets input*/
-        fgets(line, 255, original);
-/*removes whitespace horizontally*/
-    for (int i = 0; i < sizeof(line);i++){
-        if (isspace(line[i]) != 0){
-        } else{
-/*output text*/
-            fprintf(noWhiteSpace, "%c", line[i]);
-            line[255] = '\0';
-        }
-    }
-/* new line vertical*/
-    fprintf(noWhiteSpace, "\n");
-/*clearing line array*/
-    memset(line, 0, sizeof line);
-}
-/*close files*/
-    fclose(original);
-    fclose(noWhiteSpace);
-    return 0;
+	FILE *original = fopen(argv[1], "r");
+	FILE *noWhiteSpace = fopen(argv[2], "w");
+	
+	/*Argument check*/
+	if (argc > 3){
+		printf("Invalid arguments");
+		return 1;
+	}
+	/*original file check*/
+	if (original == NULL) {
+		printf ("Error reading file");
+		return 1;
+	}
+	/*counting vertical lines*/
+	FILE *originalCount = fopen(argv[1], "r");
+	int count = 0;
+	for (char c = getc(originalCount); c != EOF; c = getc(originalCount)){
+		if (c= '\n'){
+			count++;
+			}
+	}
+	fclose(originalCount);
+	/*printing non SP and \n characters*/
+	char line[255];
+	for (int j = 0; j < count + 1;j++){
+		fgets(line, 255, original); 
+		for (int i=0;i < strlen(line);i++){
+		if (line[i] != 32 && line[i] != '\n'){
+			fprintf(noWhiteSpace, "%c", line[i]);
+			}
+			}
+	}
+	fclose(original);
+	fclose(noWhiteSpace);
+	
+	return 0;
 }
